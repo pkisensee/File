@@ -118,14 +118,17 @@ public:
 
     // Create buffer the size of the file
     auto len = f.GetLength();
-    try { result.resize( len ); }
+    if( len > std::numeric_limits<size_t>::max() )
+      return false;
+    auto lenT = static_cast<size_t>( len );
+    try { result.resize( lenT ); }
     catch( std::bad_alloc& )
     {
       return false;
     }
 
     // Read file into memory
-    if( !f.Read( result.data(), len ) )
+    if( !f.Read( result.data(), lenT ) )
     {
       result.resize( 0 );
       return false;
