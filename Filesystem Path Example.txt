@@ -1,0 +1,20 @@
+// filesystem path example
+
+Windows path: c:\foo\bar\baa.txt
+Unix path:      /foo/bar/baa.txt
+
+Part            Windows          Posix
+--------------  ---------------  ---------------
+Root name       c:               <empty>
+Root directory  \                /
+Root path       c:\              /
+Relative path   foo\bar\baa.txt  foo/bar/baa.txt
+Parent path     c:\foo\bar       /foo/bar
+Filename        baa.txt          baa.txt
+Stem            baa              baa
+Extension       .txt             .txt
+
+To get directory only, e.g. foo\bar, call
+path.parent_path().relative_path()
+
+To merge elements, path = root_path / folders / filename
