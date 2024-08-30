@@ -85,10 +85,10 @@ public:
   
   uint64_t GetLength() const;
   bool GetFileTimes( File::Times& ) const;
-  bool Read( void*, size_t ) const;
-  bool Read( void*, size_t, size_t& ) const;
+  bool Read( void*, uint32_t ) const;
+  bool Read( void*, uint32_t, uint32_t& ) const;
   bool SetPos( uint64_t ) const;
-  bool Write( const void*, size_t );
+  bool Write( const void*, uint32_t );
   void Flush() const;
   
   bool Delete( bool bRecycle = true ) const;
@@ -118,17 +118,17 @@ public:
 
     // Create buffer the size of the file
     auto len = f.GetLength();
-    if( len > std::numeric_limits<size_t>::max() )
+    if( len > std::numeric_limits<uint32_t>::max() )
       return false;
-    auto lenT = static_cast<size_t>( len );
-    try { result.resize( lenT ); }
+    auto len32 = static_cast<uint32_t>( len );
+    try { result.resize( len32 ); }
     catch( std::bad_alloc& )
     {
       return false;
     }
 
     // Read file into memory
-    if( !f.Read( result.data(), lenT ) )
+    if( !f.Read( result.data(), len32 ) )
     {
       result.resize( 0 );
       return false;

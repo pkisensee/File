@@ -233,9 +233,9 @@ bool File::SetPos( uint64_t pos ) const
 //
 // Read a buffer from the current file position
 
-bool File::Read( void* pBuffer, size_t bytes ) const
+bool File::Read( void* pBuffer, uint32_t bytes ) const
 {
-  size_t bytesRead = 0;
+  uint32_t bytesRead = 0;
   auto success = Read( pBuffer, bytes, bytesRead );
   return ( success && ( bytes == bytesRead ) );
 }
@@ -244,7 +244,7 @@ bool File::Read( void* pBuffer, size_t bytes ) const
 //
 // Read a buffer from the current file position; returns bytesRead
 
-bool File::Read( void* pBuffer, size_t bytes, size_t& bytesRead ) const
+bool File::Read( void* pBuffer, uint32_t bytes, uint32_t& bytesRead ) const
 {
   assert( path_.has_filename() );
   assert( IsOpen() );
@@ -265,7 +265,7 @@ bool File::Read( void* pBuffer, size_t bytes, size_t& bytesRead ) const
 //
 // Write a buffer to the current file position
 
-bool File::Write( const void* pBuffer, size_t bytes )
+bool File::Write( const void* pBuffer, uint32_t bytes )
 {
   assert( path_.has_filename() );
   assert( IsOpen() );
