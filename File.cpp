@@ -61,10 +61,15 @@ struct CreateFileParams
   }
 };
 
-uint64_t FiletimeToU64( const FILETIME& ft )
+File::Time FiletimeToStdTime( const FILETIME& ft )
 {
+  // complex code likely reduces to single instruction
+  using FileTime = std::filesystem::file_time_type;
   ULARGE_INTEGER large = { { ft.dwLowDateTime, ft.dwHighDateTime } };
-  return large.QuadPart;
+  auto duration = FileTime::duration{ large.QuadPart };
+  FileTime fileTime{ duration };
+  File::Time result = fileTime.time_since_epoch().count();
+  return result;
 }
 
 } // end anonymous namespace
@@ -196,11 +201,10 @@ bool File::GetFileTimes( File::Times& fileTimes ) const
     if( hFile == INVALID_HANDLE_VALUE )
       return false;
 
-    // TODO use std::chrono times
-    fileTimes.creationTime   = FiletimeToU64( fd.ftCreationTime );
-    fileTimes.lastAccessTime = FiletimeToU64( fd.ftLastAccessTime );
-    fileTimes.lastWriteTime  = FiletimeToU64( fd.ftLastWriteTime );
     ::FindClose( hFile );
+    fileTimes.creationTime   = FiletimeToStdTime( fd.ftCreationTime );
+    fileTimes.lastAccessTime = FiletimeToStdTime( fd.ftLastAccessTime );
+    fileTimes.lastWriteTime  = FiletimeToStdTime( fd.ftLastWriteTime );
     return true;
   }
 
@@ -208,9 +212,9 @@ bool File::GetFileTimes( File::Times& fileTimes ) const
   [[maybe_unused]] auto success = ::GetFileTime( file_, 
                                      &creationTime, &lastAccessTime, &lastWriteTime );
   assert( success );
-  fileTimes.creationTime   = FiletimeToU64( creationTime );
-  fileTimes.lastAccessTime = FiletimeToU64( lastAccessTime );
-  fileTimes.lastWriteTime  = FiletimeToU64( lastWriteTime );
+  fileTimes.creationTime   = FiletimeToStdTime( creationTime );
+  fileTimes.lastAccessTime = FiletimeToStdTime( lastAccessTime );
+  fileTimes.lastWriteTime  = FiletimeToStdTime( lastWriteTime );
   return true;
 }
 

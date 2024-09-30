@@ -58,12 +58,12 @@ class File
 {
 public:
 
+  using Time = std::chrono::system_clock::rep;
   struct Times
   {
-    // 100-nanosec intervals since 1601/01/01Z
-    uint64_t creationTime;
-    uint64_t lastAccessTime;
-    uint64_t lastWriteTime;
+    Time creationTime;
+    Time lastAccessTime;
+    Time lastWriteTime;
   };
 
 public:
