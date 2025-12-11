@@ -17,7 +17,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include <cassert>
-#include <limits>
 #include "File.h"
 #include "Log.h"
 #include "StrUtil.h"

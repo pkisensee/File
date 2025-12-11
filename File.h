@@ -20,7 +20,9 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #pragma once
+#include <cassert>
 #include <filesystem>
+#include <limits>
 
 namespace PKIsensee
 {
@@ -89,6 +91,15 @@ public:
   bool Read( void*, uint32_t, uint32_t& ) const;
   bool SetPos( uint64_t ) const;
   bool Write( const void*, uint32_t );
+
+  template< typename T >
+  bool Write( const T& stdData )
+  {
+    assert( stdData.size() <= std::numeric_limits<uint32_t>::max() );
+    uint32_t size = static_cast<uint32_t>( stdData.size() );
+    return Write( stdData.data(), size );
+  }
+
   void Flush() const;
   
   bool Delete( bool bRecycle = true ) const;
